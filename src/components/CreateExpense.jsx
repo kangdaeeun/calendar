@@ -2,10 +2,13 @@ import styled from "styled-components";
 
 const CreateStyle = styled.div`
   display: flex;
+  width: 100%;
   background-color: white;
   gap: 10px;
   justify-content: center;
   align-items: center;
+  border-radius: 10px;
+
   label {
     display: flex;
     flex-direction: column;
