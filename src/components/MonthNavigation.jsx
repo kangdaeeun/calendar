@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 const Calendar = styled.div`
   width: 100%;
-  height: 120px;
   max-width: 800px;
   display: flex;
   flex-wrap: wrap;
