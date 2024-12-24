@@ -1,92 +1,57 @@
-import { Link } from "react-router-dom";
 import styled from "styled-components";
+import MonthNavigation from "../components/MonthNavigation";
+import CreateExpense from "../components/CreateExpense";
+import ExpenseList from "../components/ExpenseList";
+import { useEffect, useState } from "react";
+import supabase from "../utils/supabase";
 
-const Background = styled.div`
-  display: flex;
-  flex-direction: column;
-  max-width: 1200px;
+const Root = styled.div`
   width: 100%;
-  gap: 20px;
+  max-width: 1280px;
+  margin: 0 auto;
 `;
 
-const Calendar = styled.div`
-  display: flex;
-  background-color: black;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-`;
-
-const CreateStyle = styled.div`
-  display: flex;
-  background-color: white;
-  gap: 10px;
-  justify-content: center;
-  align-items: center;
-  label {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-  button {
-    background-color: skyblue;
-    border: none;
-  }
-`;
-
-const ListStyle = styled.div`
+const Main = styled.div`
+  max-width: 800px;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  gap: 20px;
+  margin: 0px auto;
 `;
 
 const Home = () => {
+  const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(1);
+
+  // API 요청하는 방법
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      const { data, error } = await supabase.from("expenses").select("*");
+      setExpenses(data);
+    };
+    fetchExpenses();
+  }, []);
+
+  // 여기서 필터링 한 후에 ExpenseList 컴포넌트에 넘겨줘야 함
+  const filteredExpenses = expenses.filter((expense) => {
+    const month = new Date(expense.data).getMonth() + 1;
+    return month === selectedMonth;
+  });
+
+  console.log(filteredExpenses);
+
   return (
-    <Background>
-      <Calendar>
-        <button>JAN</button>
-        <button>FEB</button>
-        <button>MAR</button>
-        <button>APR</button>
-        <button>MAY</button>
-        <button>JUN</button>
-        <button>JUL</button>
-        <button>AUG</button>
-        <button>SEP</button>
-        <button>OCT</button>
-        <button>NOV</button>
-        <button>DEC</button>
-      </Calendar>
-      <CreateStyle>
-        <label>
-          날짜
-          <input type="text" placeholder="YY-MM-DD" />
-        </label>
-        <label>
-          항목
-          <input type="text" placeholder="지출 항목" />
-        </label>
-        <label>
-          금액
-          <input type="number" placeholder="지출 금액" />
-        </label>
-        <label>
-          내용
-          <input type="text" placeholder="지출 내용" />
-        </label>
-        <button>저장</button>
-      </CreateStyle>
-      <ListStyle>
-        <div>
-          <Link to={`/expenses/1`}>asdf</Link>
-        </div>
-        <div>asdf</div>
-        <div>asdf</div>
-        <div>asdf</div>
-        <div>asdf</div>
-      </ListStyle>
-    </Background>
+    <Root>
+      <Main>
+        <MonthNavigation
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
+        <CreateExpense />
+        <ExpenseList />
+      </Main>
+    </Root>
   );
 };
 
