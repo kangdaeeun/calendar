@@ -2,12 +2,13 @@ import styled from "styled-components";
 import MonthNavigation from "../components/MonthNavigation";
 import CreateExpense from "../components/CreateExpense";
 import ExpenseList from "../components/ExpenseList";
+import { useEffect, useState } from "react";
+import supabase from "../utils/supabase";
 
 const Root = styled.div`
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
 `;
 
 const Main = styled.div`
@@ -20,10 +21,33 @@ const Main = styled.div`
 `;
 
 const Home = () => {
+  const [expenses, setExpenses] = useState([]);
+  const [selectedMonth, setSelectedMonth] = useState(1);
+
+  // API 요청하는 방법
+  useEffect(() => {
+    const fetchExpenses = async () => {
+      const { data, error } = await supabase.from("expenses").select("*");
+      setExpenses(data);
+    };
+    fetchExpenses();
+  }, []);
+
+  // 여기서 필터링 한 후에 ExpenseList 컴포넌트에 넘겨줘야 함
+  const filteredExpenses = expenses.filter((expense) => {
+    const month = new Date(expense.data).getMonth() + 1;
+    return month === selectedMonth;
+  });
+
+  console.log(filteredExpenses);
+
   return (
     <Root>
       <Main>
-        <MonthNavigation />
+        <MonthNavigation
+          selectedMonth={selectedMonth}
+          setSelectedMonth={setSelectedMonth}
+        />
         <CreateExpense />
         <ExpenseList />
       </Main>
