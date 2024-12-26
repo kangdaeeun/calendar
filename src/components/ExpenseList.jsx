@@ -30,14 +30,16 @@ const ListStyle = styled.div`
 `;
 
 const ExpenseList = () => {
+
+
   return (
     <ListStyle>
       <Link to={`/expenses/1`}>
-        <p>
-          <h6>2024-12-12</h6>
-          <h3>식비 - 세광양대창</h3>
-        </p>
-        <span>20,000 원</span>
+        {/* {expenses.map((expense) => {
+          return <div key={expense}>
+            {expenses}
+          </div>
+        })} */}
       </Link>
     </ListStyle>
   );

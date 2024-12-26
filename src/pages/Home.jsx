@@ -48,7 +48,7 @@ const Home = () => {
           selectedMonth={selectedMonth}
           setSelectedMonth={setSelectedMonth}
         />
-        <CreateExpense />
+        <CreateExpense expenses={expenses} setExpenses={setExpenses} />
         <ExpenseList />
       </Main>
     </Root>

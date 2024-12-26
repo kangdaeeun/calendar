@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+const BoxStyle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
 const DetailStyle = styled.div`
   display: flex;
   flex-direction: column;
@@ -10,6 +17,7 @@ const DetailStyle = styled.div`
   gap: 10px;
   justify-content: center;
   align-items: center;
+  border-radius: 20px;
 
   label {
     display: flex;
@@ -30,21 +38,24 @@ const DetailButton = styled.div`
   justify-content: center;
   gap: 10px;
   button1 {
+    border-radius: 3px;
     background-color: blue;
   }
 
   button2 {
+    border-radius: 3px;
     background-color: red;
   }
 
   button3 {
+    border-radius: 3px;
     background-color: gray;
   }
 `;
 
 const Detail = () => {
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <BoxStyle>
       <DetailStyle>
         <label>
           날짜
@@ -70,7 +81,7 @@ const Detail = () => {
           </button3>
         </DetailButton>
       </DetailStyle>
-    </div>
+    </BoxStyle>
   );
 };
 
