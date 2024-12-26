@@ -13,3 +13,8 @@
 
 4. input 에 데이터를 넣는데 4개의 input 값이 동일하게 쳐짐 따로따로 넣지 않고 한번에 할려고 해서 그런가???
 
+5. 튜터님 코드를 보니 각 컴포넌트 별로 상위 태그에 Section을 주고 시작하시던데 이걸로 그 페이지의 전체적인 css를 잡는건가요?
+
+6. ExpenseList 페이지에서 map에서 에러가 발생 > expenses를 props로 받아왔는데 이 데이터 값이 없는 경우가 있음. 데이터가 없는데 map을 어떻게 돌리지? 라는 에러임
+ExpenseList.jsx:100 Uncaught TypeError: Cannot read properties of undefined (reading 'map')
+- 이 에러를 해결하기 위해서 expenses에 물음표(?)를 달아주면 됨. 데이터가 있을 때만 뒤에 함수를 실행해줘 라는 뜻임
