@@ -5,7 +5,7 @@ import ExpenseList from "../components/ExpenseList";
 import { useEffect, useState } from "react";
 import supabase from "../utils/supabase";
 
-const Root = styled.div`
+const Section = styled.div`
   width: 100%;
   max-width: 1280px;
   margin: 0 auto;
@@ -42,7 +42,7 @@ const Home = () => {
   console.log(filteredExpenses);
 
   return (
-    <Root>
+    <Section>
       <Main>
         <MonthNavigation
           selectedMonth={selectedMonth}
@@ -51,7 +51,7 @@ const Home = () => {
         <CreateExpense expenses={expenses} setExpenses={setExpenses} />
         <ExpenseList expenses={expenses} />
       </Main>
-    </Root>
+    </Section>
   );
 };
 

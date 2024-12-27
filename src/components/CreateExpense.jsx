@@ -2,7 +2,7 @@ import { useEffect, useReducer, useState } from "react";
 import styled from "styled-components";
 import supabase from "../utils/supabase";
 
-const CreateStyle = styled.div`
+const Section = styled.div`
   display: flex;
   width: 100%;
   background-color: white;
@@ -10,6 +10,14 @@ const CreateStyle = styled.div`
   justify-content: center;
   align-items: center;
   border-radius: 10px;
+`;
+
+const LabelStyle = styled.form`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
 
   label {
     display: flex;
@@ -19,6 +27,7 @@ const CreateStyle = styled.div`
   button {
     background-color: skyblue;
     border: none;
+    border-radius: 5px;
   }
 `;
 
@@ -84,8 +93,8 @@ const CreateExpense = ({ expenses, setExpenses }) => {
   };
 
   return (
-    <CreateStyle>
-      <form onSubmit={onSubmit}>
+    <Section>
+      <LabelStyle onSubmit={onSubmit}>
         <label>
           날짜
           <input
@@ -127,8 +136,8 @@ const CreateExpense = ({ expenses, setExpenses }) => {
           />
         </label>
         <button>저장</button>
-      </form>
-    </CreateStyle>
+      </LabelStyle>
+    </Section>
   );
 };
 

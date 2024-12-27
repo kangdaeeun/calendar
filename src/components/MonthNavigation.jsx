@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
 
-const Calendar = styled.div`
+const Section = styled.div`
   width: 100%;
   max-width: 800px;
   display: flex;
@@ -46,7 +46,7 @@ const MONTHS = [
 
 export default function MonthNavigation({ selectedMonth, setSelectedMonth }) {
   return (
-    <Calendar>
+    <Section>
       {MONTHS.map((MONTH) => {
         return (
           <button
@@ -60,6 +60,6 @@ export default function MonthNavigation({ selectedMonth, setSelectedMonth }) {
           </button>
         );
       })}
-    </Calendar>
+    </Section>
   );
 }
