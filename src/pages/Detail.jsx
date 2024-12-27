@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
+import supabase from "../utils/supabase";
 
 const Section = styled.div`
   display: flex;
@@ -55,83 +56,97 @@ const DetailButton = styled.div`
 `;
 
 const Detail = () => {
+  const navigate = useNavigate();
+
+  // url에서 id 가져오기
   const { id } = useParams();
+  const [date, setDate] = useState("");
+  const [item, setItem] = useState("");
+  const [amount, setAmount] = useState("");
+  const [description, setDescription] = useState("");
 
-  // 수정 때 필요한 데이터 state
-  const [editingDate, setEditingDate] = useState(expense.date);
-  const [editingItem, setEditingItem] = useState(expense.item);
-  const [editingAmount, setEditingAmount] = useState(expense.amount);
-  const [editingDescription, setEditingDescription] = useState(
-    expense.description
-  );
+  const onChangeDate = (e) => {
+    setDate(e.target.value);
+  };
 
+  const onChangeItem = (e) => {
+    setItem(e.target.value);
+  };
+
+  const onChangeAmount = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const onChangeDescription = (e) => {
+    setDescription(e.target.value);
+  };
+
+  // id를 이용해서 데이터 가져오기
   useEffect(() => {
-    fetch()
+    const fetchExpense = async () => {
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("*")
+        .eq("id", id);
+
+      if (error) {
+        return alert("데이터를 불러오는 중 에러가 발생했습니다.");
+      }
+
+      setDate(data[0].date);
+      setItem(data[0].item);
+      setAmount(data[0].amount);
+      setDescription(data[0].description);
+    };
+    fetchExpense();
   }, []);
 
   // 수정
-  const handleEditClick = () => {
-    setEditingDate("");
-    setEditingItem("");
-    setEditingAmount("");
-    setEditingDescription("");
-  };
+  const onEdit = async () => {
+    // data가 유효한지
+    // item에 글을 작성했는지....
+    if (!date || !item || !amount || !description) {
+      return alert("모든 항목을 작성해주세요.");
+    }
 
-  // 수정 취소
-  const handleCancelEdit = (expense) => {
-    setEditingDate(expense.date);
-    setEditingItem(expense.item);
-    setEditingAmount(expense.amount);
-    setEditingDescription(expense.description);
-  };
+    // 미리 체크 후 데이터 보내기
+    const dateReg = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateReg.test(date)) {
+      alert("날짜 형식이 올바르지 않습니다.");
+      return;
+    }
 
-  const handleEditDateChange = (e) => {
-    setEditingDate(e.target.value);
-  };
-
-  const handleEditItemChange = (e) => {
-    setEditingItem(e.target.value);
-  };
-
-  const handleEditAmount = (e) => {
-    setEditingAmount(e.target.value);
-  };
-
-  const handleEditDescription = (e) => {
-    setEditingDescription(e.target.value);
-  };
-
-  // 저장
-  const handleSaveEdit = async () => {
     const { data, error } = await supabase
       .from("expenses")
       .update({
-        date: editingDate,
-        item: editingItem,
-        amount: editingAmount,
-        description: editingDescription,
+        date: date,
+        item: item,
+        amount: amount,
+        description: description,
       })
-      .eq("id", expenses.id)
-      .select();
+      .eq("id", id);
+
     if (error) {
-      return alert(error.message);
+      return alert("데이터를 수정하는 중 오류가 발생했습니다.");
     }
-    setExpenses(
-      expenses.map((expense) => (expense.id === id ? data[0] : expense))
-    );
-    setEditingDate("");
-    setEditingItem("");
-    setEditingAmount("");
-    setEditingDescription("");
+    alert("데이터가 수정되었습니다.");
+    navigate("/");
   };
 
   // 삭제
-  const handleDeleteClick = async () => {
-    const { error } = await supabase.from("expenses").delete().eq("id", id);
-    if (error) {
-      return alert(error.message);
+  const onDelete = async () => {
+    if (window.confirm("정말로 삭제하시겠습니까?")) {
+      const { data, error } = await supabase
+        .from("expenses")
+        .delete()
+        .eq("id", id);
+
+      if (error) {
+        return alert("데이터를 삭제하는 중 오류가 발생했습니다.");
+      }
+      alert("데이터가 삭제되었습니다.");
+      navigate("/");
     }
-    setExpenses(expenses.filter((expense) => expense.id !== id));
   };
 
   return (
@@ -142,8 +157,8 @@ const Detail = () => {
           <input
             type="text"
             id="date"
-            value={editingDate}
-            onChange={handleEditDateChange}
+            value={date}
+            onChange={onChangeDate}
             placeholder="YYYY-MM-DD"
           />
         </label>
@@ -152,8 +167,8 @@ const Detail = () => {
           <input
             type="text"
             id="item"
-            value={editingItem}
-            onChange={handleEditItemChange}
+            value={item}
+            onChange={onChangeItem}
             placeholder="지출 항목"
           />
         </label>
@@ -162,8 +177,8 @@ const Detail = () => {
           <input
             type="number"
             id="amount"
-            value={editingAmount}
-            onChange={handleEditAmount}
+            value={amount}
+            onChange={onChangeAmount}
             placeholder="지출 금액"
           />
         </label>
@@ -172,28 +187,15 @@ const Detail = () => {
           <input
             type="text"
             id="description"
-            value={editingDescription}
-            onChange={handleEditDescription}
+            value={description}
+            onChange={onChangeDescription}
             placeholder="지출 내용"
           />
         </label>
         <DetailButton>
-          {expense.id === id ? (
-            <>
-              <button onClick={handleSaveEdit}>저장</button>
-              <button onClick={handleCancelEdit}>취소</button>
-            </>
-          ) : (
-            <>
-              <button1 onClick={() => handleEditClick(expenses)}>수정</button1>
-              <button2 onClick={() => handleDeleteClick(expenses.id)}>
-                삭제
-              </button2>
-            </>
-          )}
-          <button3>
-            <Link to={"/"}>뒤로 가기</Link>
-          </button3>
+          <button1 onClick={onEdit}>수정</button1>
+          <button2 onClick={onDelete}>삭제</button2>
+          <button3 onClick={() => navigate(-1)}>뒤로 가기</button3>
         </DetailButton>
       </DetailStyle>
     </Section>
