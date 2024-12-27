@@ -35,7 +35,7 @@ const Home = () => {
 
   // 여기서 필터링 한 후에 ExpenseList 컴포넌트에 넘겨줘야 함
   const filteredExpenses = expenses.filter((expense) => {
-    const month = new Date(expense.data).getMonth() + 1;
+    const month = new Date(expense.date).getMonth() + 1;
     return month === selectedMonth;
   });
 
@@ -49,7 +49,7 @@ const Home = () => {
           setSelectedMonth={setSelectedMonth}
         />
         <CreateExpense expenses={expenses} setExpenses={setExpenses} />
-        <ExpenseList expenses={expenses} />
+        <ExpenseList expenses={filteredExpenses} />
       </Main>
     </Section>
   );

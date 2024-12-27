@@ -18,3 +18,14 @@
 6. ExpenseList 페이지에서 map에서 에러가 발생 > expenses를 props로 받아왔는데 이 데이터 값이 없는 경우가 있음. 데이터가 없는데 map을 어떻게 돌리지? 라는 에러임
 ExpenseList.jsx:100 Uncaught TypeError: Cannot read properties of undefined (reading 'map')
 - 이 에러를 해결하기 위해서 expenses에 물음표(?)를 달아주면 됨. 데이터가 있을 때만 뒤에 함수를 실행해줘 라는 뜻임
+
+7. 월별 버튼을 누르면 해당 월에 사용했던 지출 내역이 나오는게 아니라 빈 배열만 나오고 있음
+- 우선 튜터님의 코드를 보면 map에서 element를 사용했는데 난 MONTHS 에서 MONTH로 주었는데 이게 잘못된 건가???이게 아닌가???
+- 튜터님은 월을 1, 2, 3, ... 12 으로 number로 주었는데 난 JAN, FEB, MAR, ... DEC 으로 string 으로 줘서 불러오는 과정에서 일치하지 않아서 일어난 오류.
+-   const filteredExpenses = expenses.filter((expense) => {
+    const month = new Date(expense.date).getMonth() + 1;
+    return month === selectedMonth;
+  });
+- month는 숫자로 정의되어 있어서 사이트에 처음 들어갔을 때는 잘 뜨지만 월 버튼을 누른 순간부터는 문자로 되어 찾지 못했던 것.
+- 여기서도 month와 selectedMonth를 비교하는데 selectedMonth 초기값을 보면 (1)로 숫자이다.
+- map에서 사용한 MONTH는 단순 이름이기에 아무 상관이 없었다...
